@@ -21,7 +21,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props extends WithStyles<typeof styles> {
-  item: TreeItemViewModel;
+  items: Array<TreeItemViewModel>;
   itemVisibilityById: TreeItemVisibilityByIdViewModel;
   onClickItem: (item: TreeItemViewModel, event: React.MouseEvent) => void;
   onClickToggle: (item: TreeItemViewModel, event: React.MouseEvent) => void;
@@ -29,37 +29,34 @@ interface Props extends WithStyles<typeof styles> {
 
 const TreeWithoutStyles: React.FunctionComponent<Props> = ({
   classes,
-  item,
+  items,
   itemVisibilityById,
   onClickItem,
   onClickToggle,
 }) => {
   return (
     <div className={classes.container}>
-      {item.children !== undefined
-        ? item.children.map(child => {
-            const visible = itemVisibilityById[child.id] === true;
+      {items.map(item => {
+        const visible = itemVisibilityById[item.id] === true;
 
-            return (
-              <div key={child.id}>
-                <TreeItem
-                  item={child}
-                  onClickItem={onClickItem}
-                  onClickToggle={onClickToggle}
-                >
-                  {visible ? (
-                    <Tree
-                      item={child}
-                      itemVisibilityById={itemVisibilityById}
-                      onClickItem={onClickItem}
-                      onClickToggle={onClickToggle}
-                    />
-                  ) : null}
-                </TreeItem>
-              </div>
-            );
-          })
-        : null}
+        return (
+          <TreeItem
+            key={item.id}
+            item={item}
+            onClickItem={onClickItem}
+            onClickToggle={onClickToggle}
+          >
+            {visible && item.children !== undefined ? (
+              <Tree
+                items={item.children}
+                itemVisibilityById={itemVisibilityById}
+                onClickItem={onClickItem}
+                onClickToggle={onClickToggle}
+              />
+            ) : null}
+          </TreeItem>
+        );
+      })}
     </div>
   );
 };

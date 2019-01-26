@@ -20,40 +20,42 @@ const styles = (theme: Theme) =>
     },
   });
 
-const ITEM: TreeItemViewModel = {
-  children: [
-    {
-      id: 'id-1-1',
-      itemType: TreeItemType.FILE,
-      title: 'content-1-1',
-    },
-    {
-      id: 'id-1-2',
-      itemType: TreeItemType.FILE,
-      title: 'content-1-2',
-    },
-    {
-      children: [
-        {
-          id: 'id-1-3-1',
-          itemType: TreeItemType.FILE,
-          title: 'content-1-3-1',
-        },
-      ],
-      id: 'id-1-3',
-      itemType: TreeItemType.DIRECTORY,
-      title: 'dir-1-3',
-    },
-    {
-      id: 'id-1-4',
-      itemType: TreeItemType.FILE,
-      title: 'content-1-4',
-    },
-  ],
-  id: 'id-1',
-  itemType: TreeItemType.DIRECTORY,
-  title: 'dir-1',
-};
+const ITEMS: Array<TreeItemViewModel> = [
+  {
+    children: [
+      {
+        id: 'id-1-1',
+        itemType: TreeItemType.FILE,
+        title: 'content-1-1',
+      },
+      {
+        id: 'id-1-2',
+        itemType: TreeItemType.FILE,
+        title: 'content-1-2',
+      },
+      {
+        children: [
+          {
+            id: 'id-1-3-1',
+            itemType: TreeItemType.FILE,
+            title: 'content-1-3-1',
+          },
+        ],
+        id: 'id-1-3',
+        itemType: TreeItemType.DIRECTORY,
+        title: 'dir-1-3',
+      },
+      {
+        id: 'id-1-4',
+        itemType: TreeItemType.FILE,
+        title: 'content-1-4',
+      },
+    ],
+    id: 'id-1',
+    itemType: TreeItemType.DIRECTORY,
+    title: 'dir-1',
+  },
+];
 
 interface Props extends WithStyles<typeof styles> {}
 
@@ -74,7 +76,7 @@ class AppWithoutStyles extends React.Component<Props> {
       <div className={classes.container}>
         <Button>Hello</Button>
         <Tree
-          item={ITEM}
+          items={ITEMS}
           itemVisibilityById={itemVisibilityById}
           onClickItem={this.onClickItem}
           onClickToggle={this.onClickToggle}
