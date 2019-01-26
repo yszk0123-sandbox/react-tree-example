@@ -1,8 +1,14 @@
 import { ID, StrictRecord } from '../../application/ApplicationTypes';
 
+export enum TreeItemType {
+  DIRECTORY = 'DIRECTORY',
+  FILE = 'FILE',
+}
+
 export interface TreeItemViewModel {
   children?: Array<TreeItemViewModel>;
   id: ID;
+  itemType: TreeItemType;
   title: string;
 }
 

@@ -15,6 +15,7 @@ const styles = (theme: Theme) =>
   createStyles({
     container: {
       display: 'flex',
+      flexDirection: 'column',
       padding: theme.spacing.unit,
     },
   });
@@ -34,12 +35,32 @@ const TreeWithoutStyles: React.FunctionComponent<Props> = ({
   onClickToggle,
 }) => {
   return (
-    <TreeItem
-      item={item}
-      itemVisibilityById={itemVisibilityById}
-      onClickItem={onClickItem}
-      onClickToggle={onClickToggle}
-    />
+    <div className={classes.container}>
+      {item.children !== undefined
+        ? item.children.map(child => {
+            const visible = itemVisibilityById[child.id] === true;
+
+            return (
+              <div key={child.id}>
+                <TreeItem
+                  item={child}
+                  onClickItem={onClickItem}
+                  onClickToggle={onClickToggle}
+                >
+                  {visible ? (
+                    <Tree
+                      item={child}
+                      itemVisibilityById={itemVisibilityById}
+                      onClickItem={onClickItem}
+                      onClickToggle={onClickToggle}
+                    />
+                  ) : null}
+                </TreeItem>
+              </div>
+            );
+          })
+        : null}
+    </div>
   );
 };
 

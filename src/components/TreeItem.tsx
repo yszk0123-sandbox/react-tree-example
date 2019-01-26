@@ -10,8 +10,8 @@ import FolderIcon from '@material-ui/icons/Folder';
 import MovieIcon from '@material-ui/icons/Movie';
 import React, { CSSProperties } from 'react';
 import {
+  TreeItemType,
   TreeItemViewModel,
-  TreeItemVisibilityByIdViewModel,
 } from '../ducks/TreeSelectors/TreeViewModels';
 
 const styles = (theme: Theme) =>
@@ -24,7 +24,6 @@ const styles = (theme: Theme) =>
     container: {
       display: 'flex',
       flexDirection: 'column',
-      padding: theme.spacing.unit,
     },
     item: {
       alignItems: 'center',
@@ -39,31 +38,38 @@ function renderToggleIcon(visible: boolean): JSX.Element {
   return visible ? <ArrowDropDownIcon /> : <ArrowRightIcon />;
 }
 
-function renderTypeIcon(item: TreeItemViewModel): JSX.Element {
-  return item.children !== undefined ? <FolderIcon /> : <MovieIcon />;
+function renderTypeIcon(itemType: TreeItemType): React.ReactNode {
+  switch (itemType) {
+    case TreeItemType.DIRECTORY:
+      return <FolderIcon />;
+    case TreeItemType.FILE:
+      return <MovieIcon />;
+    default:
+      return null;
+  }
 }
 
 interface Props extends WithStyles<typeof styles> {
   item: TreeItemViewModel;
-  itemVisibilityById: TreeItemVisibilityByIdViewModel;
   onClickItem: (item: TreeItemViewModel, event: React.MouseEvent) => void;
   onClickToggle: (item: TreeItemViewModel, event: React.MouseEvent) => void;
 }
 
 const TreeItemWithoutStyles: React.FunctionComponent<Props> = ({
   classes,
+  children,
   item,
-  itemVisibilityById,
   onClickItem,
   onClickToggle,
 }) => {
-  const visible = itemVisibilityById[item.id] === true;
-  const toggleIcon = renderToggleIcon(visible);
-  const typeIcon = renderTypeIcon(item);
+  const visible = children !== null;
+  const typeIcon = renderTypeIcon(item.itemType);
   const toggleButtonStyle: CSSProperties =
-    item.children !== undefined
+    item.itemType === TreeItemType.DIRECTORY
       ? {}
       : { visibility: 'hidden', pointerEvents: 'none' };
+  const toggleIcon = renderToggleIcon(visible);
+  const title = item.title;
 
   const handleClickToggle = (event: React.MouseEvent) => {
     onClickToggle(item, event);
@@ -80,25 +86,10 @@ const TreeItemWithoutStyles: React.FunctionComponent<Props> = ({
         </div>
         <div>{typeIcon}</div>
         <div className={classes.title} onClick={handleClickItem}>
-          {item.title}
+          {title}
         </div>
       </div>
-      <div className={classes.children}>
-        {visible && item.children !== undefined
-          ? item.children.map(child => {
-              return (
-                <div key={child.id}>
-                  <TreeItem
-                    item={child}
-                    itemVisibilityById={itemVisibilityById}
-                    onClickItem={onClickItem}
-                    onClickToggle={onClickToggle}
-                  />
-                </div>
-              );
-            })
-          : null}
-      </div>
+      {visible ? <div className={classes.children}>{children}</div> : null}
     </div>
   );
 };
